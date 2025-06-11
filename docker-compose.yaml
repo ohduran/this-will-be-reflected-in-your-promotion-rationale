@@ -25,6 +25,20 @@ services:
     depends_on:
       - db
 
+  redis:
+    image: redis:latest
+
+  cron:
+    build:
+      context: ./cron
+    ports:
+      - "8008:8008"
+    depends_on:
+      - db
+      - downtime_doc_mcp
+      - redis
+
+
 
 networks:
   app-network:
