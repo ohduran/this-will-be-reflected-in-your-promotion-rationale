@@ -1,25 +1,6 @@
 version: '3.8'
 
 services:
-  app:
-    image: your-app-image:latest
-    # Or build from Dockerfile
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
-    container_name: app-container
-    ports:
-      - "8080:8080"
-    environment:
-      - NODE_ENV=development
-    volumes:
-      - ./app:/app
-    depends_on:
-      - db
-    networks:
-      - app-network
-    restart: unless-stopped
-
   db:
     image: postgres:14
     container_name: db-container
@@ -35,6 +16,15 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+
+  downtime_doc_mcp:
+    build:
+      context: ./downtime_doc_mcp
+    ports:
+      - "8888:8888"
+    depends_on:
+      - db
+
 
 networks:
   app-network:
