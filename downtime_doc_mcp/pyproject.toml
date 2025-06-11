@@ -5,6 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "google-api-python-client>=2.172.0",
+    "google-auth-httplib2>=0.2.0",
+    "google-auth-oauthlib>=1.2.2",
     "httpx>=0.28.1",
     "mcp[cli]>=1.9.3",
 ]
