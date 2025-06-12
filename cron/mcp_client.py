@@ -100,7 +100,7 @@ async def main():
     client = MCPClient()
     try:
         # Use the correct container name and port as integer
-        await client.connect_to_db_mcp_server("postgres_mcp_api", 8000)
+        await client.connect_to_db_mcp_server("postgres_mcp_api", 9000)
         # Do something meaningful, e.g., call a tool and print the result
         result = await client.session.call_tool("get_psp_status", {})
         print(result)  # <-- This will show up in the Celery logs

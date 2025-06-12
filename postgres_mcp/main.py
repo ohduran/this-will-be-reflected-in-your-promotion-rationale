@@ -3,7 +3,7 @@ from mcp.server.fastmcp import FastMCP
 import os
 from typing import Any
 
-mcp = FastMCP("Postgres MCP")
+mcp = FastMCP("Postgres MCP", port=9000)
 
 DB_CONFIG = {
     "user": os.getenv("DB_USER", "postgres"),
@@ -53,4 +53,4 @@ async def get_error_count_per_provider() -> list[dict[str, Any]]:
         return [dict(row) for row in rows]
 
 if __name__ == "__main__":
-    mcp.run(transport="sse") 
+    mcp.run(transport="streamable-http") 

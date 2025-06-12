@@ -13,8 +13,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - app-network
     restart: unless-stopped
 
   downtime_doc_mcp:
@@ -53,7 +51,7 @@ services:
     build:
       context: ./postgres_mcp
     ports:
-      - "8000:8000"
+      - "9000:9000"
     depends_on:
       - db
     environment:
@@ -62,12 +60,6 @@ services:
       DB_NAME: app_db
       DB_HOST: db
       DB_PORT: 5432
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   postgres_data:
