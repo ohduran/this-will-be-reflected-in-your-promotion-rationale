@@ -35,5 +35,22 @@ async def set_psp_status(provider_name: str, is_active: bool) -> str:
         )
     return f"Provider '{provider_name}' status set to {'active' if is_active else 'inactive'}."
 
+@mcp.tool()
+async def get_error_count_per_provider() -> list[dict[str, Any]]:
+    """
+    Get the count of errors per provider from the psp_transaction_log table.
+    An error is counted when error_code is NOT NULL.
+    """
+    pool = await get_db_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch("""
+            SELECT provider_name, COUNT(*) AS error_count
+            FROM psp_status
+            WHERE error_code IS NOT NULL
+            GROUP BY provider_name
+            ORDER BY error_count DESC
+        """)
+        return [dict(row) for row in rows]
+
 if __name__ == "__main__":
     mcp.run(transport="sse") 
