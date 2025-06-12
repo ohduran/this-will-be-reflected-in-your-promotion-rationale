@@ -36,4 +36,4 @@ async def set_psp_status(provider_name: str, is_active: bool) -> str:
     return f"Provider '{provider_name}' status set to {'active' if is_active else 'inactive'}."
 
 if __name__ == "__main__":
-    mcp.run() 
+    mcp.run(transport="sse") 
