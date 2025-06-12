@@ -35,7 +35,7 @@ async def set_psp_status(provider_name: str, is_active: bool) -> str:
         )
     return f"Provider '{provider_name}' status set to {'active' if is_active else 'inactive'}."
 
-@mcp.tool()
+@mcp.resource()
 async def get_error_count_per_provider() -> list[dict[str, Any]]:
     """
     Get the count of errors per provider from the psp_transaction_log table.
