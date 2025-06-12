@@ -39,7 +39,15 @@ services:
       - db
       - downtime_doc_mcp
       - redis
-    command: celery -A main worker -l debug
+    command: celery -A main worker -E -l debug
+    
+  celery-beat:
+    build:
+      context: ./cron
+    depends_on:
+      - redis
+      - cron
+    command: celery -A main beat -l debug
 
   postgres_mcp_api:
     build:
