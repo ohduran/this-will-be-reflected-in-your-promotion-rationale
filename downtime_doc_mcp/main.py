@@ -3,7 +3,7 @@ from mcp.server.fastmcp import FastMCP
 import os
 
 
-mcp = FastMCP("Downtime Document")
+mcp = FastMCP("Downtime Document", debug=True, log_level="DEBUG")
 
 DOCUMENT_ID = os.getenv("DOCUMENT_ID")
 
@@ -29,4 +29,4 @@ async def downtime_document_content(question: str):
     return result
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run(transport="sse")
