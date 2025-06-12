@@ -1,5 +1,6 @@
 import sys
 from contextlib import AsyncExitStack
+import asyncio
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
@@ -110,5 +111,11 @@ async def main():
     client = MCPClient()
     try:
         await client.connect_to_db_mcp_server(sys.argv[1])
+        # Do something meaningful, e.g., call a tool and print the result
+        result = await client.session.call_tool("get_psp_status", {})
+        print(result)  # <-- This will show up in the Celery logs
     finally:
         await client.cleanup()
+
+if __name__ == "__main__":
+    asyncio.run(main())
