@@ -3,7 +3,7 @@ from contextlib import AsyncExitStack
 import asyncio
 
 from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
+from mcp.client.streamable_http import streamablehttp_client as http_client
 
 from anthropic import Anthropic
 from dotenv import load_dotenv
@@ -13,26 +13,15 @@ load_dotenv()
 class MCPClient:
 
     def __init__(self) -> None:
-        self.session = None
         self.exit_stack = AsyncExitStack()
         self.anthropic = Anthropic()
 
-    async def connect_to_db_mcp_server(self, server_script_path: str):
-        server_params = StdioServerParameters(
-            command="python",
-            args = [server_script_path],
-            env=None,
-        )
+    async def connect_to_db_mcp_server(self, container: str, port: int):
 
-        stdio_transport = await self.exit_stack.enter_async_context(stdio_client(server_params))
-
-        self.stdio, self.write = stdio_transport
-
-        self.session = await self.exit_stack.enter_async_context(ClientSession(self.stdio, self.write))
-
-        await self.session.initialize()
-
-        response = await self.session.list_tools()
+        async with http_client(f"http://{container}:{port}/mcp") as transport:
+            async with ClientSession(transport[0], transport[1]) as session:
+                await session.initialize()
+                response = await self.session.list_tools()
 
         tools = response.tools()
         print("\nConnected to server with tools:", [tool.name for tool in tools])
@@ -110,7 +99,8 @@ class MCPClient:
 async def main():
     client = MCPClient()
     try:
-        await client.connect_to_db_mcp_server(sys.argv[1])
+        # Use the correct container name and port as integer
+        await client.connect_to_db_mcp_server("postgres_mcp_api", 8000)
         # Do something meaningful, e.g., call a tool and print the result
         result = await client.session.call_tool("get_psp_status", {})
         print(result)  # <-- This will show up in the Celery logs
