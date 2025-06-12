@@ -1,6 +1,5 @@
 from celery import Celery
 from celery.schedules import crontab
-import redis  # Explicitly import redis
 
 # Configure Celery to use Redis as the broker and result backend
 app = Celery(
