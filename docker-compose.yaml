@@ -27,6 +27,8 @@ services:
 
   redis:
     image: redis:latest
+    ports:
+      - "6379:6379"
 
   cron:
     build:
@@ -37,6 +39,7 @@ services:
       - db
       - downtime_doc_mcp
       - redis
+    command: celery -A main worker -l debug
 
   postgres_mcp_api:
     build:

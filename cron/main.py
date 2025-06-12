@@ -1,7 +1,16 @@
 from celery import Celery
 from celery.schedules import crontab
+import redis  # Explicitly import redis
 
-app = Celery()
+# Configure Celery to use Redis as the broker and result backend
+app = Celery(
+    'cron',
+    broker='redis://redis:6379/0',  # Use redis service name from docker-compose
+    backend='redis://redis:6379/0'
+)
+
+# Explicitly set the broker transport
+app.conf.broker_transport = 'redis'
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender: Celery, **kwargs):
