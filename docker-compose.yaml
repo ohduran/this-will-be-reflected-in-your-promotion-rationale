@@ -38,7 +38,21 @@ services:
       - downtime_doc_mcp
       - redis
 
-
+  postgres_mcp_api:
+    build:
+      context: ./postgres_mcp
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: app_db
+      DB_HOST: db
+      DB_PORT: 5432
+    networks:
+      - app-network
 
 networks:
   app-network:
