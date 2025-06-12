@@ -39,7 +39,7 @@ services:
       - db
       - downtime_doc_mcp
       - redis
-    command: celery -A main worker -E -l debug
+    command: celery -A main worker --loglevel=info --pool=solo
     
   celery-beat:
     build:
